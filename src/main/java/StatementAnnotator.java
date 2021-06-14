@@ -30,14 +30,29 @@ public class StatementAnnotator implements Annotator {
     public void annotate(Annotation annotation)  {
         String sentences = annotation.get(CoreAnnotations.TextAnnotation.class);
         PythonConnector newClass = new PythonConnector();
-        Hashtable<String, String> data = newClass.main(sentences);
+        HashMap<String, String> data = newClass.main(sentences, "NER");
+
 
         for (CoreLabel token : annotation.get(CoreAnnotations.TokensAnnotation.class)) {
 
+//            System.out.println(token);
+            String tmp =  data.get(token.get(CoreAnnotations.TextAnnotation.class));
+            if (tmp != null) {
+                token.set(CustomLabeller.class, tmp);
+            }
+            else{
+                token.set(CustomLabeller.class, "O");
+            }
 
-            token.set(CustomLabeller.class, data.get(token.get(CoreAnnotations.TextAnnotation.class)));
+            HashMap<String, String> gender_data = newClass.main(token.toString(), "GENDER");
+            String tmp_gender =  gender_data.get(token.get(CoreAnnotations.TextAnnotation.class));
+            if (! tmp_gender.equals("unknown")) {
+                token.set(GenderDectector.class, tmp_gender);
+            }
+            else{
+                token.set(GenderDectector.class, "O");
+            }
         }
-
     }
 
     @Override

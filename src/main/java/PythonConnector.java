@@ -5,17 +5,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Hashtable;
 import edu.stanford.nlp.ling.CoreAnnotations;
 
 public class PythonConnector extends CoreAnnotations.TextAnnotation{
-    public static Hashtable main(String args){
-        Hashtable<String, String> data = new Hashtable<String, String>();
+    public static HashMap<String, String> main(String args, String method_name){
+        HashMap<String, String> data = new HashMap<>();
 
         HttpURLConnection conn = null;
         DataOutputStream os = null;
         try{
-            URL url = new URL("http://127.0.0.1:5000/NER");
+            URL url = new URL("http://127.0.0.1:5000/" + method_name);
             String input = args;
 
             byte[] postData = input.getBytes(StandardCharsets.UTF_8);

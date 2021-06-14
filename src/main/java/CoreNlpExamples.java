@@ -18,19 +18,13 @@ public class CoreNlpExamples {
         prop.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, statements");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(prop);
 
-
-        String example =
-                "The ceremony is happening now. \n" +
-                        "The wedding wasn't ever not happening. \n" +
-                        "That kind of stuff doesn't happen to me.\n" +
-                        "It just never really happened.";
-
+        String example = "My name is Will's and I live in Berlin and I study at University of Alberta";
 
         Annotation document = new Annotation(example);
         pipeline.annotate(document);
 
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-
+        
         for (CoreMap sentence : sentences) {
             // traversing the words in the current sentence
             // a CoreLabel is a CoreMap with additional token-specific methods
@@ -43,13 +37,10 @@ public class CoreNlpExamples {
                 String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
                 // Label Weight dummy
                 String lw = token.get(CustomLabeller.class);
-
-                System.out.println(String.format("Print: word: [%s] pos: [%s] ne:[%s] lw:[%s]", word, pos, ne, lw));
-
+                // Gender Classification
+                String gender = token.get(GenderDectector.class);
+                System.out.println(String.format("Print: word: [%s] pos: [%s] ne:[%s] lw:[%s] gender:[%s]", word, pos, ne, lw, gender));
             }
-
-
         }
     }
-
 }
